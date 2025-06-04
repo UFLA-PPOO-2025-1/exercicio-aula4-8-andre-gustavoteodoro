@@ -10,7 +10,7 @@ import java.util.Iterator;
  *  Traduzido por Julio César Alves
  * @version 2025.05.24
  */
-public class Simulador
+public class Simulador implements Ator
 {
     // Constantes que representam informações de configuração para a simulação.
     // A largura padrão da grade.
@@ -18,8 +18,8 @@ public class Simulador
     // O comprimento padrão da grade.
     private static final int COMPRIMENTO_PADRAO = 80;
 
-    // Lista de animais no campo.
-    private List<Animal> animais;
+    // Lista de animais(atores*) no campo.
+    private List<Ator> atores;
     // O estado atual do campo.
     private Campo campo;
     // O passo atual da simulação.
@@ -49,7 +49,7 @@ public class Simulador
             largura = LARGURA_PADRAO;
         }
         
-        animais = new ArrayList<>();
+        atores = new ArrayList<>();
         campo = new Campo(comprimento, largura);
 
         visoes = new ArrayList<>();
@@ -104,18 +104,18 @@ public class Simulador
         passo++;
 
         // Fornece espaço para os animais recém-nascidos.
-        List<Animal> novosAnimais = new ArrayList<>(); 
+        List<Ator> novosAtores = new ArrayList<>(); 
         // Permite que todos os ns ajam.
-        for(Iterator<Animal> it = animais.iterator(); it.hasNext(); ) {
-            Animal animal = it.next();
-            animal.agir(novosAnimais);
-            if(!animal.estaVivo()) {
+        for(Iterator<Ator> it = atores.iterator(); it.hasNext(); ) {
+            Ator ator = it.next();
+            agir(novosAtores);
+            if(!ator.estaAtivo()) {
                 it.remove();
             }
         }
         
         // Adiciona os animais recém-nascidos às listas principais.
-        animais.addAll(novosAnimais);
+        atores.addAll(novosAtores);
 
         atualizarVisoes();
     }
@@ -126,12 +126,12 @@ public class Simulador
     public void reiniciar()
     {
         passo = 0;
-        animais.clear();
+        atores.clear();
         for (VisaoSimulador visao : visoes) {
             visao.reiniciar();
         }
 
-        GeradorDePopulacoes.povoar(campo, animais);
+        GeradorDePopulacoes.povoar(campo, atores);
         
         atualizarVisoes();
         reabilitarOpcoesVisoes();
@@ -169,5 +169,18 @@ public class Simulador
         catch (InterruptedException ie) {
             // acorda
         }
+    }
+
+    @Override
+    public void agir(List<Ator> atores) {
+        for (Ator ator : this.atores) {
+            ator.agir(atores);
+        }    
+    }
+
+    @Override
+    public boolean estaAtivo() {
+        // O simulador está ativo enquanto houver atores no campo.
+        return !atores.isEmpty();    
     }
 }
