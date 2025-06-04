@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.Random;
 
-public abstract class Animal {
+public abstract class Animal extends SerVivo {
 
     // Características compartilhadas por todos os coelhos (atributos estáticos, da classe).
 
@@ -12,22 +12,14 @@ public abstract class Animal {
     
     // A idade do animal.
     private int idade;
-    // Indica se o animal está vivo ou não.
-    private boolean vivo;
-    // A localização do animal.
-    private Localizacao localizacao;
-    // O campo ocupado.
-    private Campo campo;
 
     public Animal(boolean idadeAleatoria, Campo campo, Localizacao localizacao)
     {
-        vivo = true;
+        super(campo, localizacao);
         idade = 0;
         if(idadeAleatoria) {
             idade = rand.nextInt(obterIdadeMaxima());
         }
-        this.campo = campo;
-        definirLocalizacao(localizacao);
     }
 
     public int obterIdade() {
@@ -44,55 +36,6 @@ public abstract class Animal {
         if(idade > obterIdadeMaxima()) {
             morrer();
         }
-    }
-    
-    /**
-     * Verifica se o animal está vivo ou não.
-     * @return verdadeiro se o animal ainda estiver vivo.
-     */
-    public boolean estaVivo()
-    {
-        return vivo;
-    }
-    
-    /**
-     * Define que o animal não está mais vivo.
-     * Ele é removido do campo.
-     */
-    protected void morrer()
-    {
-        vivo = false;
-        if(localizacao != null) {
-            campo.limpar(localizacao);
-            localizacao = null;
-            campo = null;
-        }
-    }
-    
-    /**
-     * Retorna a localização do animal.
-     * @return A localização do animal.
-     */
-    public Localizacao obterLocalizacao()
-    {
-        return localizacao;
-    }
-    
-    /**
-     * Coloca o animal na nova localização no campo fornecido.
-     * @param novaLocalizacao A nova localização do animal.
-     */
-    protected void definirLocalizacao(Localizacao novaLocalizacao)
-    {
-        if(localizacao != null) {
-            campo.limpar(localizacao);
-        }
-        localizacao = novaLocalizacao;
-        campo.colocar(this, novaLocalizacao);
-    }
-
-    public Campo obterCampo() {
-        return campo;
     }
 
     /**
@@ -114,7 +57,7 @@ public abstract class Animal {
      * Novos nascimentos serão feitos em locais vizinhos livres.
      * @param novosAnimais Uma lista para retornar os animais recém-nascidos.
      */
-    protected void reproduzir(List<Animal> novosAnimais)
+    protected void reproduzir(List<Ator> novosAnimais)
     {
         // Novos animais nascem em locais vizinhos.
         // Obtém uma lista de locais vizinhos livres.
@@ -127,7 +70,6 @@ public abstract class Animal {
         }
     }
 
-
     /**
      * Uma raposa pode procriar se tiver atingido a idade de reprodução.
      */
@@ -135,9 +77,6 @@ public abstract class Animal {
     {
         return obterIdade() >= obterIdadeReproducao();
     }
-
-    
-    public abstract void agir(List<Animal> novosAnimais);
 
     protected abstract int obterIdadeMaxima();
     
