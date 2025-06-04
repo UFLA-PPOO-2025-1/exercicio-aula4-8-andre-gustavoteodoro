@@ -8,7 +8,7 @@ public class GeradorDePopulacoes {
     // A probabilidade de um coelho ser criado em qualquer posição.
     private static final double PROBABILIDADE_CRIACAO_COELHO = 0.08;
     // Quantidade fixa de caçadores a serem criados.
-    private static final int QUANTIDADE_CACADORES = 40;
+    private static final int QUANTIDADE_CACADORES = 10;
 
     /**
      * Define as cores de cada espécie de animal nas visões do simulador
@@ -42,7 +42,7 @@ public class GeradorDePopulacoes {
                 // Caso tenha menos caçadore do que QUANTIDADE_CACADORES,
                 // cria um caçador na posição atual.
                 else if (atores.stream().filter(a -> a instanceof Cacador).count() < QUANTIDADE_CACADORES) {
-                    Localizacao localizacao = new Localizacao(linha, coluna);
+                    Localizacao localizacao = campo.localizacaoAleatoria();
                     Cacador cacador = new Cacador(campo, localizacao);
                     atores.add(cacador);
                 }

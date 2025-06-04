@@ -10,24 +10,36 @@ public class Cacador extends SerVivo {
 
     @Override
     public void agir(List<Ator> cacadores) {
+        if (!estaAtivo())
+            return;
+
         Localizacao novaLocalizacao = obterCampo().localizacaoAleatoriaLivre(obterLocalizacao());
         if (novaLocalizacao != null) {
             definirLocalizacao(novaLocalizacao);
         } else {
             return;
         }
-        atirar();
+
+        // Cheque novamente antes de atirar
+        if (estaAtivo() && obterCampo() != null) {
+            atirar();
+        }
     }
 
     public void atirar() {
         if (estaAtivo()) {
             for (int i = 0; i < TIROS; i++) {
-                Localizacao alvo = obterCampo().localizacaoAleatoria();
-                if (alvo != null) {
-                    Object alvoAtor = obterCampo().obterObjetoEm(alvo);
-                    if (alvoAtor instanceof SerVivo) {
-                        SerVivo serVivo = (SerVivo) alvoAtor;
-                        serVivo.morrer();
+                Campo campo = obterCampo();
+                if (campo == null) {
+                    return; // Campo não está mais ativo
+                } else {
+                    Localizacao alvo = obterCampo().localizacaoAleatoria();
+                    if (alvo != null) {
+                        Object alvoAtor = obterCampo().obterObjetoEm(alvo);
+                        if (alvoAtor instanceof SerVivo) {
+                            SerVivo serVivo = (SerVivo) alvoAtor;
+                            serVivo.morrer();
+                        }
                     }
                 }
             }
