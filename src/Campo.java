@@ -201,4 +201,39 @@ public class Campo
     {
         return largura;
     }
+
+    public List<Localizacao> todasLocalizacoesLivres(Localizacao localizacao)
+    {
+        List<Localizacao> livres = new LinkedList<>();
+        for(Localizacao proxima : livres) {
+            if(obterObjetoEm(proxima) == null) {
+                livres.add(proxima);
+            }
+        }
+        return livres;
+    }
+
+    public Localizacao localizacaoAleatoriaLivre(Localizacao localizacao)
+    {
+        // As localizações livres disponíveis.
+        List<Localizacao> livres = todasLocalizacoesLivres(localizacao);
+        if(livres.size() > 0) {
+            return livres.get(rand.nextInt(livres.size()));
+        }
+        else {
+            return null;
+        }
+    }
+
+    /**
+     * Retorna uma localização aleatória dentro do campo.
+     * @return Uma localização aleatória dentro do campo.
+     */
+    public Localizacao localizacaoAleatoria()
+    {
+        int linha = rand.nextInt(comprimento);
+        int coluna = rand.nextInt(largura);
+        return new Localizacao(linha, coluna);
+    }
+    
 }
